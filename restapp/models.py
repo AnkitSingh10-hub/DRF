@@ -11,7 +11,9 @@ class Journalist(models.Model):
 
 
 class Article(models.Model):
-    author = models.CharField(max_length=100)
+    author = models.ForeignKey(
+        Journalist, on_delete=models.CASCADE, related_name="articles"
+    )
     title = models.CharField(max_length=100)
     description = models.CharField(max_length=100)
     main_text = models.TextField()

@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Article
+from .models import Article, Journalist
 from datetime import datetime
 from django.utils.timesince import timesince
 from datetime import date
@@ -7,6 +7,8 @@ from datetime import date
 
 class ArticleSerializer(serializers.ModelSerializer):
     time_since_pub = serializers.SerializerMethodField()
+    # author = serializers.StringRelatedField()
+    # author = JournalistSerializer()
 
     class Meta:
         model = Article
@@ -27,6 +29,18 @@ class ArticleSerializer(serializers.ModelSerializer):
         return datevalue
 
 
+class JournalistSerializer(serializers.ModelSerializer):
+    # articles = ArticleSerializer(read_only=True, many=True)
+    articles = serializers.HyperlinkedRelatedField(
+        many=True, read_only=True, view_name="article-detail"
+    )
+
+    class Meta:
+        model = Journalist
+        fields = "__all__"
+
+
+"""
 class ArticleSerializerDefault(serializers.Serializer):
     id = serializers.IntegerField(read_only=True)
     author = serializers.CharField()
@@ -72,3 +86,4 @@ class ArticleSerializerDefault(serializers.Serializer):
                 f"The length of the title should be greater than 5"
             )
         return value
+"""
